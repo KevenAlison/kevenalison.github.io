@@ -26,7 +26,9 @@ if(px1!=px2 && py1!=py2 &&px1>=0 && px2<=image.rows && py1>=0 && py2<=image.rows
 }
 ----
 
-image::/imgs/p1.1.PNG[Imagem 1] image::/imgs/p1.2.PNG[Imagem 2]
+image::/imgs/p1.1.PNG[Imagem 1]
+ 
+image::/imgs/p1.2.PNG[Imagem 2]
 
 == Prática 2 - TROCAR REGIÕES
 
@@ -46,7 +48,8 @@ part3.copyTo(img_embaralhada(Rect(image.rows/2,0,image.rows/2,image.cols/2)));
 part4.copyTo(img_embaralhada(Rect(0,0,image.rows/2,image.cols/2)));
 ----
 
-image::/imgs/p1.1.PNG[Imagem 1] image::/imgs/P2.1.PNG[Imagem 2]
+image::/imgs/p1.1.PNG[Imagem 1] 
+image::/imgs/P2.1.PNG[Imagem 2]
 
 == Prática 3 - ESTEGANOGRAFIA
 
@@ -73,7 +76,8 @@ for (int i = 0; i < img_encoded.rows; i++) {
 }
 ----
 
-image::/imgs/cod_img.PNG[Imagem codificada] image::/imgs/decod_img.PNG[Imagem decodificada]
+image::/imgs/cod_img.PNG[Imagem codificada] 
+image::/imgs/decod_img.PNG[Imagem decodificada]
 
 == Prática 4 - PREENCHIMENTO DE REGIÕES
 
@@ -82,14 +86,3 @@ Para este exercício, temos uma imagem com objetos dispostos no espaço. Nosso o
 image::/imgs/bubble1.PNG[Imagem original]
 
 Vendo a imagem, o primeiro desafio é remover as bolhas que tocam a borda da imagem, pois não dá para saber com certeza se há ou não buracos nelas, já que não conseguimos ver seu corpo completo. Para eliminar esses objetos, foi construída uma lógica que varre as posições correspondentes à borda da imagem, caçando objetos que estejam nesse limite e preenchendo com a cor de fundo, para dar a impressão de que foram retirados.
-
-[source,c++]
-----
-width = image.cols;
-height = image.rows;
-p.x = 0;
-p.y = 0;
-n_objremovido = 0;
-for (int i = 0; i < height; i++) {
-    for (int j = 0; j < width; j++) {
-        if (image.at<uchar>(i, j) == 255 && (

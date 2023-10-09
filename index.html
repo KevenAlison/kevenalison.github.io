@@ -472,7 +472,12 @@ if(px1!=px2 &amp;&amp; py1!=py2 &amp;&amp;px1&gt;=0 &amp;&amp; px2&lt;=image.row
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="/imgs/p1.1.PNG" alt="Imagem 1] image::/imgs/p1.2.PNG[Imagem 2">
+<img src="/imgs/p1.1.PNG" alt="Imagem 1">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/imgs/p1.2.PNG" alt="Imagem 2">
 </div>
 </div>
 </div>
@@ -499,7 +504,12 @@ part4.copyTo(img_embaralhada(Rect(0,0,image.rows/2,image.cols/2)));</code></pre>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="/imgs/p1.1.PNG" alt="Imagem 1] image::/imgs/P2.1.PNG[Imagem 2">
+<img src="/imgs/p1.1.PNG" alt="Imagem 1">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/imgs/P2.1.PNG" alt="Imagem 2">
 </div>
 </div>
 </div>
@@ -537,7 +547,12 @@ for (int i = 0; i &lt; img_encoded.rows; i++) {
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="/imgs/cod_img.PNG" alt="Imagem codificada] image::/imgs/decod_img.PNG[Imagem decodificada">
+<img src="/imgs/cod_img.PNG" alt="Imagem codificada">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/imgs/decod_img.PNG" alt="Imagem decodificada">
 </div>
 </div>
 </div>
@@ -556,24 +571,12 @@ for (int i = 0; i &lt; img_encoded.rows; i++) {
 <div class="paragraph">
 <p>Vendo a imagem, o primeiro desafio é remover as bolhas que tocam a borda da imagem, pois não dá para saber com certeza se há ou não buracos nelas, já que não conseguimos ver seu corpo completo. Para eliminar esses objetos, foi construída uma lógica que varre as posições correspondentes à borda da imagem, caçando objetos que estejam nesse limite e preenchendo com a cor de fundo, para dar a impressão de que foram retirados.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-c++" data-lang="c++">width = image.cols;
-height = image.rows;
-p.x = 0;
-p.y = 0;
-n_objremovido = 0;
-for (int i = 0; i &lt; height; i++) {
-    for (int j = 0; j &lt; width; j++) {
-        if (image.at&lt;uchar&gt;(i, j) == 255 &amp;&amp; (</code></pre>
-</div>
-</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-10-09 17:18:20 -0300
+Last updated 2023-10-09 18:37:04 -0300
 </div>
 </div>
 </body>
