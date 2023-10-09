@@ -1,0 +1,252 @@
+= Página Pessoal - Adson Emanuel
+Processamento Digital de Imagens (DCA0445)
+:toc: left
+:toc-title: Sumário
+:doctype: book
+
+== Prefácio
+
+[.text-justify]
+Esse site contém a resolução dos exercícios que foram propostos na disciplina Processamento Digital de Imagens ofertada pelo Departamento de Engenharia de Computação e Automação da UFRN e ministrada pelo professor Agostinho Brito. As informações acerca da disciplina podem ser vista em: https://agostinhobritojr.github.io/tutorial/pdi/.
+
+[.text-justify]
+Os exercícios foram desenvolvidos em C++, sendo necessário ter a biblioteca OpenCV https://opencv.org/. As regras de compilação dos códigos estão definidos no arquivo Makefile que está presente no site do curso. Dessa forma, para compilar e executar os códigos utiliza-se os seguintes comandos:
+
+[source,SHELL]
+----
+$ make <nome_arquivo>
+$ ./<nome_arquivo> <nome_da_imagem_ou_video>
+----
+
+= Parte I: Processamento de Imagens no Domínio Espacial
+
+== 1. Manipulando Pixels em uma Imagem
+
+=== 1.1. Negativo numa região
+
+[.text-justify]
+O primeiro programa implementado chama-se <<regions,regions.cpp>>. Ele solicita ao usuário as coordenadas de dois pontos, P1 e P2, localizados dentro dos limites do tamanho da imagem e usa-os como vértices opostos na criação de um retângulo. A região triangular criada é exibida com o negativo da imagem no local correspondente.
+
+[#regions]
+.regioes.cpp
+[source, CPP]
+----
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+int main(int, char**){
+  cv::Mat image;
+  cv::Vec3b val;
+
+  image= cv::imread("biel.png",cv::IMREAD_COLOR);
+  if(!image.data)
+    std::cout << "A imagem não foi aberta" << std::endl;
+  
+  int cols, rows, x1, x2, y1 ,y2;
+  
+  cols = image.cols;
+  rows = image.rows;
+
+  std::cout << "O tamanho da imagem, em pixels, que será editada é: " << cols << "x" << rows << std::endl;
+
+  while (true){
+    std::cout << "Dessa forma, defina, respectivamente, as coordenadas x e y dos pontos P1 e P2." << std::endl;
+	std::cout << "x1 = ";
+	std::cin >> x1;
+	std::cout << "y1 = ";
+	std::cin >> y1;
+	
+
+    if (x1 < 0 || x1 >= cols || y1 < 0 || y1 >= rows) {
+      std::cout << "Pelo menos um dos pontos está fora dos limites da imagem." << std::endl;
+    } else {
+      std::cout << "x2 = ";
+      std::cin >> x2;
+      std::cout << "y2 = ";
+      std::cin >> y2;
+
+      // Verifique se os pontos formam um retângulo válido
+      if (x2 < 0 || x2 >= cols || y2 < 0 || y2 >= rows || x1 >= x2 || y1 >= y2) {
+        std::cout << "Os pontos não formam um retângulo válido." << std::endl;
+      } else {
+        break;  // As coordenadas são válidas, saia do loop
+      }
+    }  
+  }
+  
+  cv::namedWindow("janela", cv::WINDOW_AUTOSIZE);
+
+  for(int i=x1;i<x2;i++){
+    for(int j=y1;j<y2;j++){
+	  val = image.at<cv::Vec3b>(i,j);
+
+      val[0] = 255 - val[0];
+      val[1] = 255 - val[1];
+      val[2] = 255 - val[2];
+      image.at<cv::Vec3b>(i,j)= val;
+    }
+  }
+  
+  cv::imshow("janela", image);  
+  cv::waitKey();
+  
+  cv::imwrite("biel_negativo.png", image);
+  
+  return 0;
+}
+----
+
+[.text-justify]
+Num primeiro momento se faz importante observar a presença de trechos de códigos que estão na implemntação acima e serão usados em diversas outras implementações. São eles: leitura e verificação, onde a imagem é aberta e se verifica se há algum erro com ela; criação e fechamento da janela onde a imagem será exibida; e o trecho que salva a nova imagem na memória.
+
+.Leitura e Verificação
+[source, CPP]
+----
+image= cv::imread("biel.png",cv::IMREAD_COLOR);
+if(!image.data)
+  std::cout << "A imagem não foi aberta" << std::endl;
+----
+
+.Criação e fechamento da Janela de Visualização
+[source, CPP]
+----
+cv::namedWindow("janela", cv::WINDOW_AUTOSIZE);
+
+cv::imshow("janela", image);  
+cv::waitKey();
+----
+
+.Salvando nova imagem
+[source, CPP]
+----
+cv::imwrite("biel_negativo.png", image);
+----
+
+[.text-justify]
+Tratando agora do restante da implementação, os pontos máximos de largura e altura da imagem são obtidos e printados, para que o usuário saiba quais os limites ele deve respeitar ao inserir os pontos. Após isso, os vértices do retângulo onde será aplicado o negativo são solicitados ao usuário. Caso ele forneça pontos que estejam fora dos limites da imagem ou que não formem um retângulo válido o programa solicita que ele forneça novos pontos.
+
+[source, CPP]
+----
+int cols, rows, x1, x2, y1 ,y2;
+  
+cols = image.cols;
+rows = image.rows;
+
+std::cout << "O tamanho da imagem, em pixels, que será editada é: " << cols << "x" << rows << std::endl;
+
+while (true){
+  std::cout << "Dessa forma, defina, respectivamente, as coordenadas x e y dos pontos P1 e P2." << std::endl;
+  std::cout << "x1 = ";
+  std::cin >> x1;
+  std::cout << "y1 = ";
+  std::cin >> y1;
+	
+  // Verifique se os pontos estão dentro dos limites da imagem
+  if (x1 < 0 || x1 >= cols || y1 < 0 || y1 >= rows) {
+    std::cout << "Pelo menos um dos pontos está fora dos limites da imagem." << std::endl;
+  } else {
+    std::cout << "x2 = ";
+    std::cin >> x2;
+    std::cout << "y2 = ";
+    std::cin >> y2;
+
+    // Verifique se os pontos formam um retângulo válido
+    if (x2 < 0 || x2 >= cols || y2 < 0 || y2 >= rows || x1 >= x2 || y1 >= y2) {
+      std::cout << "Os pontos não formam um retângulo válido." << std::endl;
+    } else {
+      break;  // As coordenadas são válidas, saia do loop
+    }
+  }  
+}
+----
+
+[.text-justify]
+Em seguida, percorre-se o espaço do retângulo e atribui-se a vairável val as cores do pixel que está na posição atual. De posse dessa informação, o efeito negativo é aplicado ao subtrair cada valor de canal de cor do valor máximo possível (255). Por fim, os novos valores de cada canal de cor são atualizados. 
+
+[source, CPP]
+----
+for(int i=x1;i<x2;i++){
+    for(int j=y1;j<y2;j++){
+	  val = image.at<cv::Vec3b>(i,j);
+
+      val[0] = 255 - val[0];
+      val[1] = 255 - val[1];
+      val[2] = 255 - val[2];
+      image.at<cv::Vec3b>(i,j)= val;
+    }
+  }
+----
+
+[.text-justify]
+Um exemplo de execução do programa pode ser visto a seguir.
+
+[terminal_regions.png]
+.Terminal: regions.cpp
+image::PDI/1/terminal_regions.png[terminal_regions, 627, 122]
+
+[#biel.png]
+.Entrada - biel.png
+image::PDI/1/biel.png[Lena, 256, 256]
+
+[#biel_negativo.png]
+.Saída - biel_negativo.png
+image::PDI/1/biel_negativo.png[biel_negativo, 256, 256]
+
+=== 1.2. Trocando regiões
+
+[.text-justify]
+O programa <<trocaregioes,trocaregioes.cpp>> troca os quadrantes em diagonal na imagem.
+
+[#trocaregioes]
+.trocaregioes.cpp
+[source, CPP]
+----
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+int main(int, char**){
+  cv::Mat image;
+  cv::Vec3b aux;
+  
+  image= cv::imread("Lena.png",cv::IMREAD_COLOR);
+  if(!image.data)
+    std::cout << "nao abriu imagem.png" << std::endl;
+
+  cv::namedWindow("janela", cv::WINDOW_AUTOSIZE);
+
+  for (int i = 0; i < image.rows/2; i++) {
+    for (int j = 0; j < image.cols/2; j++) {
+      aux = image.at<cv::Vec3b>(i,j);
+      image.at<cv::Vec3b>(i,j) = image.at<cv::Vec3b>(i+image.rows/2,j+image.cols/2);
+      image.at<cv::Vec3b>(i+image.rows/2,j+image.cols/2) = aux;
+
+      aux = image.at<cv::Vec3b>(i+image.rows/2,j);
+      image.at<cv::Vec3b>(i+image.rows/2,j) = image.at<cv::Vec3b>(i,j+image.cols/2);
+      image.at<cv::Vec3b>(i,j+image.cols/2) = aux;
+	}
+  }
+  
+  cv::imshow("janela", image);  
+  cv::waitKey();
+  
+  cv::imwrite("Lena_trocaregioes.png", image);
+  
+  return 0;
+}
+----
+
+[.text-justify]
+A troca das regiões da imagem foi feita a partir do aninhamento de dois laços for que irão percorrer metade das linhas e metade das colunas da imagem. 
+
+[.text-justify]
+Dentro dos for’s, pode-se dizer que existem dois blocos de códigos, onde ambos fazem o uso da vairável auxilair trono. Num primeiro momento, a varíavel trono guarda as características do pixel do primeiro quadrante, esse pixel é substituído pelo pixel do quarto quadrante ao se acessar a posição (i+image.rows/2,j+image.cols/2) e então o pixel do quarto quadrante é atualizado ao receber o trono. 
+
+[.text-justify]
+Esse mesmo procedimento se repete no segundo bloco de código, mas dessa vez  o trono é utilizado para fazer a troca entre os elementos do segundo quadrante, acessados na posição (i,j+image.cols/2)  e do terceiro quadrante, acessados na posição (i+image.rows/2,j). 
+
+[.text-justify]
+Assim, ao fim das iterações do laço, as regiões são trocadas, como é possível averiguar na  <<imagem,Lena_trocaregioes.png>>
+
+[#Lena_trocaregioes.png]
+.Saída - Lena_trocaregioes.png
+image::PDI/1/Lena_trocaregioes.png[Lena_trocaregioes, 512, 512]
