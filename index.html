@@ -470,15 +470,17 @@ if(px1!=px2 &amp;&amp; py1!=py2 &amp;&amp;px1&gt;=0 &amp;&amp; px2&lt;=image.row
 }</code></pre>
 </div>
 </div>
-<div class="imageblock">
+<div id="p1" class="imageblock 1 PNG">
 <div class="content">
 <img src="/imgs/p1.1.PNG" alt="Imagem 1">
 </div>
+<div class="title">Figure 1. Figura Original</div>
 </div>
-<div class="imageblock">
+<div id="p122" class="imageblock 2 PNG">
 <div class="content">
 <img src="/imgs/p1.2.PNG" alt="Imagem 2">
 </div>
+<div class="title">Figure 2. Figura Negativa</div>
 </div>
 </div>
 </div>
@@ -502,15 +504,17 @@ part3.copyTo(img_embaralhada(Rect(image.rows/2,0,image.rows/2,image.cols/2)));
 part4.copyTo(img_embaralhada(Rect(0,0,image.rows/2,image.cols/2)));</code></pre>
 </div>
 </div>
-<div class="imageblock">
+<div id="p12" class="imageblock 1 PNG">
 <div class="content">
-<img src="/imgs/p1.1.PNG" alt="Imagem 1">
+<img src="/imgs/p1.1.PNG" alt="Imagem 3">
 </div>
+<div class="title">Figure 3. Imagem Original</div>
 </div>
-<div class="imageblock">
+<div id="P2" class="imageblock 1 PNG">
 <div class="content">
-<img src="/imgs/P2.1.PNG" alt="Imagem 2">
+<img src="/imgs/P2.1.PNG" alt="Imagem 4">
 </div>
+<div class="title">Figure 4. Imagem com regiões trocadas</div>
 </div>
 </div>
 </div>
@@ -520,10 +524,11 @@ part4.copyTo(img_embaralhada(Rect(0,0,image.rows/2,image.cols/2)));</code></pre>
 <div class="paragraph">
 <p>Em resumo, a esteganografia se baseia em "criptografar" uma imagem dentro de outra, de forma que apenas uma delas fique visível. A técnica utilizada na disciplina, vista no exemplo <code>esteg-encode.cpp</code>, se baseia em codificar as imagens a partir da manipulação do conteúdo presente nos pixels da imagem, a partir da ordem de significância. Dada essa introdução, foi proposta a decodificação da seguinte figura, que possui uma imagem oculta entre seus pixels.</p>
 </div>
-<div class="imageblock">
+<div id="cod_img" class="imageblock PNG">
 <div class="content">
-<img src="/imgs/cod_img.PNG" alt="Imagem codificada">
+<img src="/imgs/cod_img.PNG" alt="Imagem 5">
 </div>
+<div class="title">Figure 5. Imagem Original Codificada</div>
 </div>
 <div class="paragraph">
 <p>Para a figura em questão, após montado o código e realizando alguns testes, percebeu-se que a figura oculta estava presente nos 3 bits menos significativos da imagem codificada. Dessa forma, a figura original é representada pelos 5 bits mais significativos, e a figura escondida é representada pelos 3 bits menos significativos.</p>
@@ -545,15 +550,17 @@ for (int i = 0; i &lt; img_encoded.rows; i++) {
 }</code></pre>
 </div>
 </div>
-<div class="imageblock">
+<div id="cod_img2" class="imageblock PNG">
 <div class="content">
-<img src="/imgs/cod_img.PNG" alt="Imagem codificada">
+<img src="/imgs/cod_img.PNG" alt="Imagem 6">
 </div>
+<div class="title">Figure 6. Imagem Original Codificada</div>
 </div>
-<div class="imageblock">
+<div id="decod_img" class="imageblock PNG">
 <div class="content">
-<img src="/imgs/decod_img.PNG" alt="Imagem decodificada">
+<img src="/imgs/decod_img.PNG" alt="Imagem 7">
 </div>
+<div class="title">Figure 7. Imagem Decodificada</div>
 </div>
 </div>
 </div>
@@ -563,10 +570,11 @@ for (int i = 0; i &lt; img_encoded.rows; i++) {
 <div class="paragraph">
 <p>Para este exercício, temos uma imagem com objetos dispostos no espaço. Nosso objetivo é identificar as "bolhas", realizando a contagem de quantas têm buracos e quantas não têm.</p>
 </div>
-<div class="imageblock">
+<div id="bubble1" class="imageblock PNG">
 <div class="content">
-<img src="/imgs/bubble1.PNG" alt="Imagem original">
+<img src="/imgs/bubble1.PNG" alt="Imagem 8">
 </div>
+<div class="title">Figure 8. Imagem Original</div>
 </div>
 <div class="paragraph">
 <p>Vendo a imagem, o primeiro desafio é remover as bolhas que tocam a borda da imagem, pois não dá para saber com certeza se há ou não buracos nelas, já que não conseguimos ver seu corpo completo. Para eliminar esses objetos, foi construída uma lógica que varre as posições correspondentes à borda da imagem, caçando objetos que estejam nesse limite e preenchendo com a cor de fundo, para dar a impressão de que foram retirados.</p>
@@ -591,10 +599,11 @@ for (int i = 0; i &lt; height; i++) {
 image_sborda = image.clone();</code></pre>
 </div>
 </div>
-<div class="imageblock">
+<div id="bubble2" class="imageblock PNG">
 <div class="content">
-<img src="/imgs/bubble2.PNG" alt="Imagem sem bolhas próximas à borda">
+<img src="/imgs/bubble2.PNG" alt="Imagem 9">
 </div>
+<div class="title">Figure 9. Imagem Sem Bolhas na Borda</div>
 </div>
 <div class="paragraph">
 <p>Em seguida, é utilizado o algoritmo Flood Fill para identificar e contar a quantidade de elementos na imagem.</p>
@@ -631,10 +640,11 @@ for (int i = 0; i &lt; height; i++) {
 }</code></pre>
 </div>
 </div>
-<div class="imageblock">
+<div id="bubble3" class="imageblock PNG">
 <div class="content">
-<img src="/imgs/bubble3.PNG" alt="Imagem com objetos identificados e contagem de buracos">
+<img src="/imgs/bubble3.PNG" alt="Imagem 10">
 </div>
+<div class="title">Figure 10. Imagem com Bolhas Preenchidas</div>
 </div>
 </div>
 </div>
@@ -703,15 +713,17 @@ while (1) {
 <div class="paragraph">
 <p>Com o código aplicado, temos o seguinte resultado de saída para a imagem ghibli.png:</p>
 </div>
-<div class="imageblock">
+<div id="histo_grayscale" class="imageblock PNG">
 <div class="content">
-<img src="/imgs/histo_grayscale.PNG" alt="Histograma da imagem em escala de cinza">
+<img src="/imgs/histo_grayscale.PNG" alt="Imagem 11">
 </div>
+<div class="title">Figure 11. Histograma Imagem Original</div>
 </div>
-<div class="imageblock">
+<div id="histo_equalize" class="imageblock PNG">
 <div class="content">
-<img src="/imgs/histo_equalize.PNG" alt="Histograma da imagem equalizada">
+<img src="/imgs/histo_equalize.PNG" alt="Imagem 12">
 </div>
+<div class="title">Figure 12. Histograma Imagem Equalizada</div>
 </div>
 </div>
 </div>
@@ -820,25 +832,30 @@ int main(int, char ** argv) {
 <div class="paragraph">
 <p>Como resultado, é perceptível que o filtro Laplaciano do Gaussiano possui maior atenuação nas regiões de contorno da imagem, intensificando as bordas em comparação ao filtro gaussiano mais simples. Isso ocorre porque esse filtro funciona primeiro suavizando a imagem através do filtro gaussiano, tornando as bordas mais nítidas e proeminentes devido ao efeito de suavização, e depois aplicando o Laplaciano, que detecta as bordas com mais precisão devido ao efeito do gaussiano.</p>
 </div>
-<div class="imageblock">
+<div id="mean_filter" class="imageblock PNG">
 <div class="content">
-<img src="/imgs/mean_filter.PNG" alt="Filtro de Média">
+<img src="/imgs/mean_filter.PNG" alt="Imagem 13">
 </div>
+<div class="title">Figure 13. Filtro Gaussiano</div>
 </div>
-<div class="literalblock">
+<div id="lap_filter" class="imageblock PNG">
 <div class="content">
-<pre> +
-image::/imgs/lap_filter.PNG[Filtro Laplaciano]
- =
-image::/imgs/lapgauss_filter.PNG[Filtro Laplaciano do Gaussiano]</pre>
+<img src="/imgs/lap_filter.PNG" alt="Imagem 14">
 </div>
+<div class="title">Figure 14. Filtro Laplaciano</div>
+</div>
+<div id="lapgauss_filter" class="imageblock PNG">
+<div class="content">
+<img src="/imgs/lapgauss_filter.PNG" alt="Imagem 15">
+</div>
+<div class="title">Figure 15. Filtro Laplaciano do Gaussiano</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-10-09 18:48:55 -0300
+Last updated 2023-10-09 19:07:41 -0300
 </div>
 </div>
 </body>

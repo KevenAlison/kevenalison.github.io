@@ -26,8 +26,12 @@ if(px1!=px2 && py1!=py2 &&px1>=0 && px2<=image.rows && py1>=0 && py2<=image.rows
 }
 ----
 
+[#p1.1.PNG]
+.Figura Original
 image::/imgs/p1.1.PNG[Imagem 1]
- 
+
+[#p122.2.PNG]
+.Figura Negativa
 image::/imgs/p1.2.PNG[Imagem 2]
 
 == Prática 2 - TROCAR REGIÕES
@@ -48,14 +52,21 @@ part3.copyTo(img_embaralhada(Rect(image.rows/2,0,image.rows/2,image.cols/2)));
 part4.copyTo(img_embaralhada(Rect(0,0,image.rows/2,image.cols/2)));
 ----
 
-image::/imgs/p1.1.PNG[Imagem 1] 
-image::/imgs/P2.1.PNG[Imagem 2]
+[#p12.1.PNG]
+.Imagem Original
+image::/imgs/p1.1.PNG[Imagem 3]
+
+[#P2.1.PNG]
+.Imagem com regiões trocadas
+image::/imgs/P2.1.PNG[Imagem 4]
 
 == Prática 3 - ESTEGANOGRAFIA
 
 Em resumo, a esteganografia se baseia em "criptografar" uma imagem dentro de outra, de forma que apenas uma delas fique visível. A técnica utilizada na disciplina, vista no exemplo `esteg-encode.cpp`, se baseia em codificar as imagens a partir da manipulação do conteúdo presente nos pixels da imagem, a partir da ordem de significância. Dada essa introdução, foi proposta a decodificação da seguinte figura, que possui uma imagem oculta entre seus pixels.
 
-image::/imgs/cod_img.PNG[Imagem codificada]
+[#cod_img.PNG]
+.Imagem Original Codificada
+image::/imgs/cod_img.PNG[Imagem 5]
 
 Para a figura em questão, após montado o código e realizando alguns testes, percebeu-se que a figura oculta estava presente nos 3 bits menos significativos da imagem codificada. Dessa forma, a figura original é representada pelos 5 bits mais significativos, e a figura escondida é representada pelos 3 bits menos significativos.
 
@@ -76,14 +87,21 @@ for (int i = 0; i < img_encoded.rows; i++) {
 }
 ----
 
-image::/imgs/cod_img.PNG[Imagem codificada] 
-image::/imgs/decod_img.PNG[Imagem decodificada]
+[#cod_img2.PNG]
+.Imagem Original Codificada
+image::/imgs/cod_img.PNG[Imagem 6]
+
+[#decod_img.PNG]
+.Imagem Decodificada
+image::/imgs/decod_img.PNG[Imagem 7]
 
 == Prática 4 - PREENCHIMENTO DE REGIÕES
 
 Para este exercício, temos uma imagem com objetos dispostos no espaço. Nosso objetivo é identificar as "bolhas", realizando a contagem de quantas têm buracos e quantas não têm.
 
-image::/imgs/bubble1.PNG[Imagem original]
+[#bubble1.PNG]
+.Imagem Original
+image::/imgs/bubble1.PNG[Imagem 8]
 
 Vendo a imagem, o primeiro desafio é remover as bolhas que tocam a borda da imagem, pois não dá para saber com certeza se há ou não buracos nelas, já que não conseguimos ver seu corpo completo. Para eliminar esses objetos, foi construída uma lógica que varre as posições correspondentes à borda da imagem, caçando objetos que estejam nesse limite e preenchendo com a cor de fundo, para dar a impressão de que foram retirados.
 
@@ -108,7 +126,9 @@ for (int i = 0; i < height; i++) {
 image_sborda = image.clone();
 ----
 
-image::/imgs/bubble2.PNG[Imagem sem bolhas próximas à borda]
+[#bubble2.PNG]
+.Imagem Sem Bolhas na Borda
+image::/imgs/bubble2.PNG[Imagem 9]
 
 Em seguida, é utilizado o algoritmo Flood Fill para identificar e contar a quantidade de elementos na imagem.
 
@@ -144,7 +164,9 @@ for (int i = 0; i < height; i++) {
 }
 ----
 
-image::/imgs/bubble3.PNG[Imagem com objetos identificados e contagem de buracos]
+[#bubble3.PNG]
+.Imagem com Bolhas Preenchidas
+image::/imgs/bubble3.PNG[Imagem 10]
 
 == Prática 5 - HISTOGRAMA & EQUALIZAÇÃO
 
@@ -208,8 +230,13 @@ while (1) {
 
 Com o código aplicado, temos o seguinte resultado de saída para a imagem ghibli.png:
 
-image::/imgs/histo_grayscale.PNG[Histograma da imagem em escala de cinza] 
-image::/imgs/histo_equalize.PNG[Histograma da imagem equalizada]
+[#histo_grayscale.PNG]
+.Histograma Imagem Original
+image::/imgs/histo_grayscale.PNG[Imagem 11]
+
+[#histo_equalize.PNG]
+.Histograma Imagem Equalizada
+image::/imgs/histo_equalize.PNG[Imagem 12]
 
 == Prática 6 - FILTROS LAPLACIANO E LAPLACIANO DO GAUSSIANO
 
@@ -314,10 +341,16 @@ int main(int, char ** argv) {
 
 Como resultado, é perceptível que o filtro Laplaciano do Gaussiano possui maior atenuação nas regiões de contorno da imagem, intensificando as bordas em comparação ao filtro gaussiano mais simples. Isso ocorre porque esse filtro funciona primeiro suavizando a imagem através do filtro gaussiano, tornando as bordas mais nítidas e proeminentes devido ao efeito de suavização, e depois aplicando o Laplaciano, que detecta as bordas com mais precisão devido ao efeito do gaussiano.
 
-image::/imgs/mean_filter.PNG[Filtro de Média]
- + 
-image::/imgs/lap_filter.PNG[Filtro Laplaciano] 
- = 
-image::/imgs/lapgauss_filter.PNG[Filtro Laplaciano do Gaussiano]
+[#mean_filter.PNG]
+.Filtro Gaussiano
+image::/imgs/mean_filter.PNG[Imagem 13]
+
+[#lap_filter.PNG]
+.Filtro Laplaciano
+image::/imgs/lap_filter.PNG[Imagem 14] 
+
+[#lapgauss_filter.PNG]
+.Filtro Laplaciano do Gaussiano
+image::/imgs/lapgauss_filter.PNG[Imagem 15]
 
 
