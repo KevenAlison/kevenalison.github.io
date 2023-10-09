@@ -571,12 +571,274 @@ for (int i = 0; i &lt; img_encoded.rows; i++) {
 <div class="paragraph">
 <p>Vendo a imagem, o primeiro desafio é remover as bolhas que tocam a borda da imagem, pois não dá para saber com certeza se há ou não buracos nelas, já que não conseguimos ver seu corpo completo. Para eliminar esses objetos, foi construída uma lógica que varre as posições correspondentes à borda da imagem, caçando objetos que estejam nesse limite e preenchendo com a cor de fundo, para dar a impressão de que foram retirados.</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++">width = image.cols;
+height = image.rows;
+p.x = 0;
+p.y = 0;
+n_objremovido = 0;
+for (int i = 0; i &lt; height; i++) {
+    for (int j = 0; j &lt; width; j++) {
+         if(image.at&lt;uchar&gt;(i,j) == 255 &amp;&amp; (i == 0 || i == height-1 || j == 0 || j == width-1)){
+	    n_objremovido++;
+            p.x = j;
+            p.y = i;
+            floodFill(image, p, 0);
+        }
+    }
+}
+image_sborda = image.clone();</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/imgs/bubble2.PNG" alt="Imagem sem bolhas próximas à borda">
+</div>
+</div>
+<div class="paragraph">
+<p>Em seguida, é utilizado o algoritmo Flood Fill para identificar e contar a quantidade de elementos na imagem.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++">n_objects = 0;
+for (int i = 0; i &lt; height; i++) {
+    for (int j = 0; j &lt; width; j++) {
+        if (image.at&lt;uchar&gt;(i, j) == 255) {
+            // Achou um objeto
+            n_objects++;
+            p.x = j;
+            p.y = i;
+            // Preenche o objeto com o contador
+            floodFill(image, p, n_objects);
+        }
+    }
+}
+p.x = 0;
+p.y = 0;
+floodFill(image, p, 255);
+
+int buracos = 0;
+for (int i = 0; i &lt; height; i++) {
+    for (int j = 0; j &lt; width; j++) {
+        if (image.at&lt;uchar&gt;(i, j) == 0) {
+            buracos++;
+            p.x = j;
+            p.y = i;
+            floodFill(image, p, buracos);
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/imgs/bubble3.PNG" alt="Imagem com objetos identificados e contagem de buracos">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prática_5_histograma_equalização">Prática 5 - HISTOGRAMA &amp; EQUALIZAÇÃO</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A prática a seguir tem como objetivo principal a implementação de um programa que utiliza como base a webcam para capturar imagens e realizar a equalização do histograma. No meu caso, não foi possível utilizar a webcam devido a algumas limitações do meu ambiente, então utilizei a mesma imagem base utilizada nos exemplos anteriores. O programa teve como base o exemplo histogram.cpp e basicamente extrai o histograma da imagem original em escala de cinza e, em seguida, realiza a equalização, criando um novo histograma para a imagem equalizada. A equalização do histograma é facilmente realizada através da função equalizeHist.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++">int histw = nbins, histh = nbins / 2;
+Mat histImgegray(histh, histw, CV_8UC1, Scalar(0));
+Mat histImgequalizado(histh, histw, CV_8UC1, Scalar(0));
+
+while (1) {
+    image.copyTo(gray);
+
+    // Calculando histograma da imagem em escala de cinza original
+    calcHist(&amp;gray, 1, 0, Mat(), histgray, 1,
+             &amp;nbins, &amp;histrange,
+             uniform, accumulate);
+
+    normalize(histgray, histgray, 0, histImgegray.rows, cv::NORM_MINMAX, -1, Mat());
+
+    histImgegray.setTo(Scalar(0));
+
+    for (int i = 0; i &lt; nbins; i++) {
+        line(histImgegray,
+             Point(i, histh),
+             Point(i, histh - cvRound(histgray.at&lt;float&gt;(i))),
+             Scalar(255), 1, 8, 0);
+    }
+
+    histImgegray.copyTo(gray(Rect(0, 0, nbins, histh)));
+
+    imshow("Grayscale", gray);
+
+    // Equalizar histograma
+    equalizeHist(image, iequalizado);
+
+    // Calculando histograma da imagem equalizada
+    calcHist(&amp;iequalizado, 1, 0, Mat(), histequalizado, 1, &amp;nbins, &amp;histrange, uniform, accumulate);
+
+    // Normalizando
+    normalize(histequalizado, histequalizado, 0, histImgequalizado.rows, NORM_MINMAX, -1, Mat());
+
+    histImgequalizado.setTo(Scalar(0));
+
+    for (int i = 0; i &lt; nbins; i++) {
+        line(histImgequalizado,
+            Point(i, histh),
+            Point(i, histh - cvRound(histequalizado.at&lt;float&gt;(i))),
+            Scalar(255, 255, 255), 1, 8, 0);
+    }
+
+    histImgequalizado.copyTo(iequalizado(Rect(0, 0, nbins, histh)));
+
+    imshow("Imagem Equalizada", iequalizado);
+
+    key = waitKey(30);
+    if (key == 27) break;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Com o código aplicado, temos o seguinte resultado de saída para a imagem ghibli.png:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/imgs/histo_grayscale.PNG" alt="Histograma da imagem em escala de cinza">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/imgs/histo_equalize.PNG" alt="Histograma da imagem equalizada">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prática_6_filtros_laplaciano_e_laplaciano_do_gaussiano">Prática 6 - FILTROS LAPLACIANO E LAPLACIANO DO GAUSSIANO</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Para esta prática, foi utilizado como referência o código filtroespacial.cpp, cuja funcionalidade conta com diversos filtros de imagem. O objetivo era implementar um filtro Laplaciano do Gaussiano e compará-lo com o filtro Laplaciano, que já estava implementado no código original.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++">#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
+
+void printmask(cv::Mat &amp;m) {
+  for (int i = 0; i &lt; m.size().height; i++) {
+    for (int j = 0; j &lt; m.size().width; j++) {
+      std::cout &lt;&lt; m.at&lt;float&gt;(i, j) &lt;&lt; ",";
+    }
+    std::cout &lt;&lt; "\n";
+  }
+}
+
+int main(int, char ** argv) {
+  cv::Mat image, framegray, frame32f, frameFiltered;
+  float media[] = {0.1111, 0.1111, 0.1111, 0.1111, 0.1111,
+                   0.1111, 0.1111, 0.1111, 0.1111};
+  float gauss[] = {0.0625, 0.125,  0.0625, 0.125, 0.25,
+                   0.125,  0.0625, 0.125,  0.0625};
+  float horizontal[] = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
+  float vertical[] = {-1, -2, -1, 0, 0, 0, 1, 2, 1};
+  float laplacian[] = {0, -1, 0, -1, 4, -1, 0, -1, 0};
+  float boost[] = {0, -1, 0, -1, 5.2, -1, 0, -1, 0};
+  float laplgauss [] ={0,0,-1,0,0,0,-1,-2,-1,0,-1,-2,16,-2,-1,
+                      0,-1,-2,-1,0,0,0,-1,0,0};
+  cv::Mat mask(3, 3, CV_32F), mask_scale;
+  cv::Mat result;
+  int absolut;
+  char key;
+
+  image = cv::imread(argv[1], cv::IMREAD_GRAYSCALE); // Carregar a imagem em escala de cinza
+  if (!image.data) {
+    std::cout &lt;&lt; "Erro ao abrir a imagem" &lt;&lt; std::endl;
+    return -1;
+  }
+
+  cv::namedWindow("filtro aplicado", cv::WINDOW_NORMAL);
+  cv::namedWindow("original", cv::WINDOW_NORMAL);
+
+  mask = cv::Mat(3, 3, CV_32F, media); // Inicializar a máscara
+  absolut = 1; // Calcula o valor absoluto da imagem
+
+  for (;;) {
+    cv::imshow("original", image);
+    image.convertTo(frame32f, CV_32F);
+    cv::filter2D(frame32f, frameFiltered, frame32f.depth(), mask, cv::Point(1, 1), 0);
+    if (absolut) {
+      frameFiltered = cv::abs(frameFiltered);
+    }
+
+    frameFiltered.convertTo(result, CV_8U);
+
+    cv::imshow("filtro aplicado", result);
+
+    key = (char)cv::waitKey(10);
+    if (key == 27) break; // Tecla Esc pressionada!
+    switch (key) {
+      case 'a':
+        absolut = !absolut;
+        break;
+      case 'm':
+        mask = cv::Mat(3, 3, CV_32F, media);
+        printmask(mask);
+        break;
+      case 'g':
+        mask = cv::Mat(3, 3, CV_32F, gauss);
+        printmask(mask);
+        break;
+      case 'h':
+        mask = cv::Mat(3, 3, CV_32F, horizontal);
+        printmask(mask);
+        break;
+      case 'v':
+        mask = cv::Mat(3, 3, CV_32F, vertical);
+        printmask(mask);
+        break;
+      case 'l':
+        mask = cv::Mat(3, 3, CV_32F, laplacian);
+        printmask(mask);
+        break;
+        case 'p':
+        mask = cv::Mat(5, 5, CV_32F, laplgauss);
+        printmask(mask);
+        break;
+      case 'b':
+        mask = cv::Mat(3, 3, CV_32F, boost);
+        break;
+      default:
+        break;
+    }
+  }
+  return 0;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como resultado, é perceptível que o filtro Laplaciano do Gaussiano possui maior atenuação nas regiões de contorno da imagem, intensificando as bordas em comparação ao filtro gaussiano mais simples. Isso ocorre porque esse filtro funciona primeiro suavizando a imagem através do filtro gaussiano, tornando as bordas mais nítidas e proeminentes devido ao efeito de suavização, e depois aplicando o Laplaciano, que detecta as bordas com mais precisão devido ao efeito do gaussiano.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/imgs/mean_filter.PNG" alt="Filtro de Média">
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre> +
+image::/imgs/lap_filter.PNG[Filtro Laplaciano]
+ =
+image::/imgs/lapgauss_filter.PNG[Filtro Laplaciano do Gaussiano]</pre>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-10-09 18:37:04 -0300
+Last updated 2023-10-09 18:48:55 -0300
 </div>
 </div>
 </body>
