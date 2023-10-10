@@ -852,10 +852,135 @@ int main(int, char ** argv) {
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_prática_6_algoritmo_tiltshift">Prática 6 - ALGORITMO TILTSHIFT</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Esta prática tem como objetivo utilizar o código 'addweighted.cpp' como referência para implementação de um programa tiltshift.cpp que é capaz de definir uma região na imagem para ser borrada, de forma que essa região seja controlada pelo usuário na interface gráfica atravéz de 'trackbars'.
+O programa original já conta com duas trackbars, porém não são úteis para nossa aplicação na forma que estão implementadas. Sendo assim foram criadas 3 funções de implementação de trackbar do tipo slider para altura, deslocamento e decaimento.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++">#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
+
+int l1 = -100;
+int l2 = 50;
+int d = 6;
+int centro = 100;
+int altura = 0;
+int largura = 0;
+int slider_altura = 0;
+int slider_altura_max = 100;
+int slider_decaimento = 0;
+int slider_decaimento_max = 100;
+int slider_deslocamento = 0;
+int slider_deslocamento_max = 100;
+
+cv::Mat imagem, imagem_borrada, ponderada, ponderada_negativa, resultado;
+
+void addEffect() {
+    altura = imagem.rows;
+    largura = imagem.cols;
+    centro = slider_deslocamento * altura / 100;
+
+    for (int i = 0; i &lt; altura; i++) {
+        double fx = 0.0;
+        if (d != 0) {
+            fx = -0.5 * (tanh((i - centro + l1) / d) - tanh((i - centro + l2) / d));
+        } else {
+            fx = -0.5 * (tanh((i - centro + l1) / 0.01) - tanh((i - centro + l2) / 0.01));
+        }
+
+        for (int j = 0; j &lt; largura; j++) {
+            ponderada.at&lt;cv::Vec3d&gt;(i, j) = cv::Vec3d(fx, fx, fx);
+            ponderada_negativa.at&lt;cv::Vec3d&gt;(i, j) = cv::Vec3d(1.0 - fx, 1.0 - fx, 1.0 - fx);
+        }
+    }
+
+    cv::Mat res1, res2;
+    imagem.convertTo(imagem, CV_64FC3);
+    imagem_borrada.convertTo(imagem_borrada, CV_64FC3);
+
+    res1 = imagem.mul(ponderada);
+    res2 = imagem_borrada.mul(ponderada_negativa);
+
+    resultado = res1 + res2;
+
+    resultado.convertTo(resultado, CV_8UC3);
+
+    cv::imshow("tiltshift", resultado);
+
+    // Salvar a imagem resultante em um arquivo
+    cv::imwrite("resultado_tiltshift.png", resultado);
+}
+
+void on_trackbar_deslocamento(int val, void* userdata) {
+    slider_deslocamento = val;
+    addEffect();
+}
+
+void on_trackbar_altura(int val, void* userdata) {
+    slider_altura = val;
+    int alt = altura * slider_altura / 100;
+    l1 = -alt / 2;
+    l2 = alt / 2;
+    addEffect();
+}
+
+void on_trackbar_decaimento(int val, void* userdata) {
+    slider_decaimento = val;
+    d = slider_decaimento;
+    addEffect();
+}
+
+int main(int argc, char** argv) {
+    imagem = cv::imread("ghibli.png", cv::IMREAD_COLOR);
+
+    if (imagem.empty()) {
+        std::cout &lt;&lt; "Erro ao carregar a imagem." &lt;&lt; std::endl;
+        return -1;
+    }
+
+    cv::resize(imagem, imagem, cv::Size(800, 600));
+
+    cv::Mat media = cv::Mat::ones(7, 7, CV_64F) / (7.0 * 7.0);
+    cv::filter2D(imagem, imagem_borrada, -1, media);
+
+    ponderada = cv::Mat(imagem.rows, imagem.cols, CV_64FC3);
+    ponderada_negativa = cv::Mat(imagem.rows, imagem.cols, CV_64FC3);
+    resultado = cv::Mat(imagem.rows, imagem.cols, CV_64FC3);
+
+    // Valores iniciais dos sliders
+    slider_altura = 0;
+    slider_decaimento = 0;
+    slider_deslocamento = 0;
+
+    cv::namedWindow("tiltshift", cv::WINDOW_AUTOSIZE);
+
+    cv::createTrackbar("Altura x 100", "tiltshift", &amp;slider_altura, slider_altura_max, on_trackbar_altura, nullptr);
+    cv::createTrackbar("Decaimento x 100", "tiltshift", &amp;slider_decaimento, slider_decaimento_max, on_trackbar_decaimento, nullptr);
+    cv::createTrackbar("Deslocamento x 100", "tiltshift", &amp;slider_deslocamento, slider_deslocamento_max, on_trackbar_deslocamento, nullptr);
+
+    addEffect();
+
+    cv::waitKey(0);
+    return 0;
+}</code></pre>
+</div>
+</div>
+<div id="tiltshift" class="imageblock PNG">
+<div class="content">
+<img src="/imgs/tiltshift.PNG" alt="Imagem 16">
+</div>
+<div class="title">Figure 16. Imagem com slidebars</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-10-09 19:07:41 -0300
+Last updated 2023-10-09 21:40:57 -0300
 </div>
 </div>
 </body>
