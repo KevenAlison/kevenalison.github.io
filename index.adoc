@@ -2,6 +2,8 @@
 Repositório para arquivo de práticas e projetos relacionados à disciplina de Processamento Digital de Imagens.
 Discente: link:https://KevenAlison.github.io[Keven Alison]
 
+= UNIDADE 1
+
 == Prática 1 - REGIONS
 
 Com base no código `exemplos/pixels.cpp`, foi implementado um código que consiste em pegar os pontos definidos pelo usuário na entrada e transformar a região retangular definida por esses dois pontos em uma região negativa. Para isso, foi implementado um `for` que varre os pixels definidos pela região e define a cor de cada pixel através da função `image.at<uchar>`. Para a implementação, a imagem foi definida em grayscale para definir a cor máxima como 255, obtendo a cor negativa através da subtração desse valor pelo valor do pixel em grayscale.
@@ -472,3 +474,126 @@ int main(int argc, char** argv) {
 [#tiltshift.PNG]
 .Imagem com slidebars
 image::/imgs/tiltshift.PNG[Imagem 16]
+
+= UNIDADE 1
+
+== Prática 1 - ALGORITMO XXX
+XXXX
+
+[source,c++]
+----
+
+#include <opencv2/opencv.hpp>
+#include <cstdlib>
+
+using namespace cv;
+using namespace std;
+
+int main(int argc, char** argv) {
+    if (argc != 2) {
+        cout << "Usage: " << argv[0] << " <image_path>" << endl;
+        return -1;
+    }
+
+    int nClusters = 8, nRodadas = 1;
+    Mat rotulos, centros;
+
+    Mat img = imread(argv[1], IMREAD_COLOR);
+
+    if (img.empty()) {
+        cout << "Erro ao ler a imagem." << endl;
+        return -1;
+    }
+
+    Mat samples(img.rows * img.cols, 3, CV_32F);
+    for (int y = 0; y < img.rows; y++) {
+        for (int x = 0; x < img.cols; x++) {
+            for (int z = 0; z < 3; z++) {
+                samples.at<float>(y + x * img.rows, z) = img.at<Vec3b>(y, x)[z];
+            }
+        }
+    }
+
+    // Verifique o número de elementos e clusters antes de chamar kmeans
+    cout << "Number of elements (N): " << samples.rows << endl;
+    cout << "Number of clusters (K): " << nClusters << endl;
+
+    if (samples.rows > 0 && nClusters <= samples.rows) {
+        kmeans(samples,
+               nClusters,
+               rotulos,
+               TermCriteria(TermCriteria::MAX_ITER | TermCriteria::EPS, 10000, 0.0001),
+               nRodadas,
+               KMEANS_RANDOM_CENTERS,
+               centros);
+    } else {
+        cout << "Error: Number of clusters should be less than or equal to the number of elements." << endl;
+        return -1;
+    }
+
+    Mat rotulada(img.size(), img.type());
+    for (int y = 0; y < img.rows; y++) {
+        for (int x = 0; x < img.cols; x++) {
+            int indice = rotulos.at<int>(y + x * img.rows, 0);
+            rotulada.at<Vec3b>(y, x)[0] = (uchar)centros.at<float>(indice, 0);
+            rotulada.at<Vec3b>(y, x)[1] = (uchar)centros.at<float>(indice, 1);
+            rotulada.at<Vec3b>(y, x)[2] = (uchar)centros.at<float>(indice, 2);
+        }
+    }
+
+    imshow("Imagem original:", img);
+    imshow("Imagem clusterizada: ", rotulada);
+
+    waitKey();
+
+    return 0;
+}
+
+
+----
+
+[#clusterizacao.PNG]
+.Imagem com slidebars
+image::/imgs/mononoke.GIF[Imagem 16]
+
+== Prática 2 - DIGITOS
+XXXX
+
+[source,c++]
+----
+
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+using namespace std;
+using namespace cv;
+
+int main () {
+
+    Mat image_original, resultado, element;
+
+    image_original = imread (argv[1], IMREAD_UNCHANGED);
+
+    if (image_original.empty()) {
+        cout << "Erro ao carregar a imagem de referência." << endl;
+        return -1;
+    }
+
+    //element = getStructuringElement(MORPH_RECT, Size(3,3));
+    //element = getStructuringElement(MORPH_RECT, Size(5,10));
+    //element = getStructuringElement(MORPH_RECT, Size(4,10));
+    element = getStructuringElement(MORPH_RECT, Size(4,15));
+    morphologyEx (image_original, resultado, MORPH_OPEN, element);
+    imshow ("Original:", image_original);
+    imshow ("Resultado:", resultado);
+    waitKey ();
+
+    return 0;
+}
+
+
+----
+
+[#digitos.PNG]
+.Comparação do resultado
+image::/imgs/digitos.PNG[Imagem 16]
