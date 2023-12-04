@@ -445,6 +445,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
+<h2 id="_unidade_1">UNIDADE 1</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
 <h2 id="_prática_1_regions">Prática 1 - REGIONS</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -977,10 +983,151 @@ int main(int argc, char** argv) {
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_unidade_1_2">UNIDADE 1</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prática_1_algoritmo_xxx">Prática 1 - ALGORITMO XXX</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>XXXX</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++">#include &lt;opencv2/opencv.hpp&gt;
+#include &lt;cstdlib&gt;
+
+using namespace cv;
+using namespace std;
+
+int main(int argc, char** argv) {
+    if (argc != 2) {
+        cout &lt;&lt; "Usage: " &lt;&lt; argv[0] &lt;&lt; " &lt;image_path&gt;" &lt;&lt; endl;
+        return -1;
+    }
+
+    int nClusters = 8, nRodadas = 1;
+    Mat rotulos, centros;
+
+    Mat img = imread(argv[1], IMREAD_COLOR);
+
+    if (img.empty()) {
+        cout &lt;&lt; "Erro ao ler a imagem." &lt;&lt; endl;
+        return -1;
+    }
+
+    Mat samples(img.rows * img.cols, 3, CV_32F);
+    for (int y = 0; y &lt; img.rows; y++) {
+        for (int x = 0; x &lt; img.cols; x++) {
+            for (int z = 0; z &lt; 3; z++) {
+                samples.at&lt;float&gt;(y + x * img.rows, z) = img.at&lt;Vec3b&gt;(y, x)[z];
+            }
+        }
+    }
+
+    // Verifique o número de elementos e clusters antes de chamar kmeans
+    cout &lt;&lt; "Number of elements (N): " &lt;&lt; samples.rows &lt;&lt; endl;
+    cout &lt;&lt; "Number of clusters (K): " &lt;&lt; nClusters &lt;&lt; endl;
+
+    if (samples.rows &gt; 0 &amp;&amp; nClusters &lt;= samples.rows) {
+        kmeans(samples,
+               nClusters,
+               rotulos,
+               TermCriteria(TermCriteria::MAX_ITER | TermCriteria::EPS, 10000, 0.0001),
+               nRodadas,
+               KMEANS_RANDOM_CENTERS,
+               centros);
+    } else {
+        cout &lt;&lt; "Error: Number of clusters should be less than or equal to the number of elements." &lt;&lt; endl;
+        return -1;
+    }
+
+    Mat rotulada(img.size(), img.type());
+    for (int y = 0; y &lt; img.rows; y++) {
+        for (int x = 0; x &lt; img.cols; x++) {
+            int indice = rotulos.at&lt;int&gt;(y + x * img.rows, 0);
+            rotulada.at&lt;Vec3b&gt;(y, x)[0] = (uchar)centros.at&lt;float&gt;(indice, 0);
+            rotulada.at&lt;Vec3b&gt;(y, x)[1] = (uchar)centros.at&lt;float&gt;(indice, 1);
+            rotulada.at&lt;Vec3b&gt;(y, x)[2] = (uchar)centros.at&lt;float&gt;(indice, 2);
+        }
+    }
+
+    imshow("Imagem original:", img);
+    imshow("Imagem clusterizada: ", rotulada);
+
+    waitKey();
+
+    return 0;
+}</code></pre>
+</div>
+</div>
+<div id="mononoke" class="imageblock png">
+<div class="content">
+<img src="/imgs/mononoke.png" alt="Imagem 16">
+</div>
+<div class="title">Figure 17. Imagem com slidebars</div>
+</div>
+<div id="mononokegif" class="imageblock gif">
+<div class="content">
+<img src="/imgs/mononoke.gif" alt="Imagem 16">
+</div>
+<div class="title">Figure 18. Imagem com slidebars</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prática_2_digitos">Prática 2 - DIGITOS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>XXXX</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-c++" data-lang="c++">#include &lt;iostream&gt;
+#include &lt;opencv2/opencv.hpp&gt;
+
+using namespace std;
+using namespace cv;
+
+int main () {
+
+    Mat image_original, resultado, element;
+
+    image_original = imread (argv[1], IMREAD_UNCHANGED);
+
+    if (image_original.empty()) {
+        cout &lt;&lt; "Erro ao carregar a imagem de referência." &lt;&lt; endl;
+        return -1;
+    }
+
+    //element = getStructuringElement(MORPH_RECT, Size(3,3));
+    //element = getStructuringElement(MORPH_RECT, Size(5,10));
+    //element = getStructuringElement(MORPH_RECT, Size(4,10));
+    element = getStructuringElement(MORPH_RECT, Size(4,15));
+    morphologyEx (image_original, resultado, MORPH_OPEN, element);
+    imshow ("Original:", image_original);
+    imshow ("Resultado:", resultado);
+    waitKey ();
+
+    return 0;
+}</code></pre>
+</div>
+</div>
+<div id="digitos" class="imageblock PNG">
+<div class="content">
+<img src="/imgs/digitos.png" alt="Imagem 16">
+</div>
+<div class="title">Figure 19. Comparação do resultado</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-10-09 21:40:57 -0300
+Last updated 2023-12-04 00:59:04 -0300
 </div>
 </div>
 </body>
