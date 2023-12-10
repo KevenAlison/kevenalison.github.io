@@ -563,7 +563,7 @@ image::/imgs/mononoke.gif[Imagem 16]
 
 
 == Prática 2 - DIGITOS
-O problema em questão indica o uso do programa 'morfologia.cpp' como base para a criação de um sistema que faça o reconhecimento e preenchimento de caracteres numéricos de segmento em imagens, dada a dificuldade que softwares de reconhecimento podem ter ao tentar identificar os números nesse padrão. O algoritmo de morfologia aplica uma série de operações que alteram a forma da imagem exibe o resultado visualmente para cada operação, sendo assim nosso objetivo é utilizar esses artifícios para tornar os dígitos segmentados mais legíveis ao serem lidos por sensores.
+O problema em questão indica o uso do programa 'morfologia.cpp' como base para a criação de um sistema que faça o reconhecimento e preenchimento de caracteres numéricos de segmento em imagens, dada a dificuldade que softwares de reconhecimento podem ter ao tentar identificar os números nesse padrão. 
 Para resolver esse problema o código foi desenvolvido com base na crianção de formas retangulares para preencher os espaços entre os digitos através da aplicação de uma erosão seguida por uma dilatação, usando um elemento estruturante retangular de tamanho 4x15 para gerar um resultado coerente com as proporções da imagem. 
 
 [source,c++]
