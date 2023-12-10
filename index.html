@@ -984,16 +984,16 @@ int main(int argc, char** argv) {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_unidade_1_2">UNIDADE 1</h2>
+<h2 id="_unidade_2">UNIDADE 2</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_prática_1_algoritmo_xxx">Prática 1 - ALGORITMO XXX</h2>
+<h2 id="_prática_1_algoritmo_de_clusterização">Prática 1 - ALGORITMO DE CLUSTERIZAÇÃO</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>XXXX</p>
+<p>Para essa prática utilizouj-se o programa 'kmeans,cpp' com algumas alterações para analisarmos o resultado da filtragem. O programa em questão tem como parâmetro nRodadas=1 e gera centros de forma aleatória, resultando em uma filtragem diferente à cada execução, em teoria.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1061,7 +1061,9 @@ int main(int argc, char** argv) {
     waitKey();
 
     return 0;
-}</code></pre>
+}
+
+O código em questão foi executado 10 vezes, gerando os seguintes resultados:</code></pre>
 </div>
 </div>
 <div id="mononoke" class="imageblock png">
@@ -1076,13 +1078,17 @@ int main(int argc, char** argv) {
 </div>
 <div class="title">Figure 18. Imagem com slidebars</div>
 </div>
+<div class="paragraph">
+<p>É perceptível que não há grandes mudanças para a imagem em questão, além de alguns detalhes sutis que variam em certas execuções. Isso pode estar ocorrendo devido ao baixo numero de rodadas, que pode vir a afetar a estabilidade dos resultados.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_prática_2_digitos">Prática 2 - DIGITOS</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>XXXX</p>
+<p>O problema em questão indica o uso do programa 'morfologia.cpp' como base para a criação de um sistema que faça o reconhecimento e preenchimento de caracteres numéricos de segmento em imagens, dada a dificuldade que softwares de reconhecimento podem ter ao tentar identificar os números nesse padrão. O algoritmo de morfologia aplica uma série de operações que alteram a forma da imagem exibe o resultado visualmente para cada operação, sendo assim nosso objetivo é utilizar esses artifícios para tornar os dígitos segmentados mais legíveis ao serem lidos por sensores.
+Para resolver esse problema o código foi desenvolvido com base na crianção de formas retangulares para preencher os espaços entre os digitos através da aplicação de uma erosão seguida por uma dilatação, usando um elemento estruturante retangular de tamanho 4x15 para gerar um resultado coerente com as proporções da imagem.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1127,7 +1133,7 @@ int main () {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-12-04 00:59:04 -0300
+Last updated 2023-12-10 02:43:28 -0300
 </div>
 </div>
 </body>
